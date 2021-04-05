@@ -71,4 +71,93 @@ const menu = [
     img: "./images/item-9.jpeg",
     desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
   },
+  //Estos dos últimos los agregué inventados para ver cómo salían los botones dinámicos. Repiten info de los otros platos.
+  {
+    id: 10,
+    title: "quarantine buddy",
+    category: "desayuno",
+    price: 16.99,
+    img: "./images/item-9.jpeg",
+    desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
+  },
+  {
+    id: 1,
+    title: "quarantine buddy",
+    category: "jugo",
+    price: 16.99,
+    img: "./images/item-10.jpeg",
+    desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
+  },
 ];
+
+//Declaraciones
+const seccionMedio = document.querySelector(".section-center");
+
+function arrayPlatosAHtml(arr) {
+  let menuFiltrado = arr.map(function (plato) {
+    return `<article class="menu">
+    <img src=${plato.img} class="photo" alt=${plato.title}>
+    <div class="item-info">
+      <header>
+        <h4>${plato.title}</h4>
+        <h4 class="price">$${plato.price}</h4>
+      </header>
+      <p class="item-text">
+        ${plato.desc}
+      </p>
+    </div>
+  </article>`;
+  });
+  menuFiltrado = menuFiltrado.join("");
+  seccionMedio.innerHTML = menuFiltrado;
+}
+
+function creaBotones(arr) {
+  let categorías = [];
+
+  for (let x = 0; x < arr.length; x++) {
+    if (!categorías.includes(arr[x].category)) {
+      categorías.push(arr[x].category);
+    }
+  }
+
+  let htmlBotones = categorías.map(function (x) {
+    return `<button class="filter-btn" type="button" data-grupo=${x}>${x}</button>`;
+  });
+
+  htmlBotones =
+    "<button class='filter-btn' type='button' data-grupo='all'>all</button>" +
+    htmlBotones.join("");
+  document.querySelector(".btn-container").innerHTML = htmlBotones;
+}
+
+//Ejecuciones
+//Creo los botones dinámicamente
+window.addEventListener("DOMContentLoaded", function () {
+  creaBotones(menu);
+
+  //Referencio los botones ya creados
+  const botones = document.querySelectorAll(".filter-btn");
+
+  //Les pongo un eventListener a los botones
+  botones.forEach(function (btn) {
+    btn.addEventListener("click", function (wtf) {
+      const tipoDeComida = wtf.currentTarget.dataset.grupo;
+      let platosAMostrar;
+
+      if (tipoDeComida === "all") {
+        platosAMostrar = menu;
+      } else {
+        platosAMostrar = menu.filter(function (plato) {
+          return plato.category === tipoDeComida;
+        });
+      }
+      arrayPlatosAHtml(platosAMostrar);
+    });
+  });
+});
+
+//Muestro los platos dinámicamente -Al inicio todos
+window.addEventListener("DOMContentLoaded", function () {
+  arrayPlatosAHtml(menu);
+});
